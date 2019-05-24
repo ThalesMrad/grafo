@@ -16,7 +16,7 @@ int Backtracking(int **MatAdj, int k, int numVertices);
 int AlgoritmoExato(Grafo* gr);
 
 void insertionSort(Vertice* V, int numVertices);
-Vertice* inicializaVetorIndice(Grafo* gr);
+Vertice* inicializaVetor(Grafo* gr,int caso);
 int heuristica1(Grafo* gr);
 
 int heuristica2(Grafo* gr);

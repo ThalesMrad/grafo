@@ -78,7 +78,7 @@ void insertionSort(Vertice* V, int numVertices){
     }
 }
 
-Vertice*  inicializaVetor(Grafo* gr){
+Vertice*  inicializaVetor(Grafo* gr,int caso){
   Vertice* V = malloc(gr->numVertices* sizeof(Vertice));
     for(int i = 0; i < gr->numVertices; i++){
       V[i].id = i;
@@ -87,7 +87,9 @@ Vertice*  inicializaVetor(Grafo* gr){
       V[i].cor = 0;
       V[i].grauSaturacao = 0;
     }
+    if(caso == 1){
       insertionSort(V,gr->numVertices);
+    }
     return V;
 }
 
@@ -95,7 +97,7 @@ int heuristica1(Grafo* gr){
   /* Primeiro, criamos um vetor de struct Vertice que guarda o número dos vértices
   e o seu respectivo grau. Depois, na função inicializaVetor, salvamos os valores no vetor
   e ordenamos ele com a função insertionSort*/
-  Vertice* V = inicializaVetor(gr);
+  Vertice* V = inicializaVetor(gr,1);
   int k = 1;
   for(int i=0; i < gr->numVertices; i++){
     V[i].corDefinitiva = TRUE;
@@ -152,7 +154,7 @@ void atualizaSaturacao(Grafo* gr,Vertice* V,int maisSaturado){
   }
 }
 int heuristica2(Grafo* gr){
-  Vertice* V = inicializaVetor(gr);
+  Vertice* V = inicializaVetor(gr,2);
   int maisSaturado = 0, cor = 0;
   int k = 1;
   for(int i = 0; i < gr->numVertices; i++){
@@ -161,9 +163,11 @@ int heuristica2(Grafo* gr){
     int corControle = 0;
 
     while(corControle < V[maisSaturado].cor){
-      //printf("%d ",V[maisSaturado].cor);
+      printf("%d  ",V[maisSaturado].cor);
       atribuiCor(gr,V,maisSaturado);
         corControle++;
+      if(corControle > gr->numVertices)
+        break;
     }
     if(V[maisSaturado].cor > k)
       k = V[maisSaturado].cor;
