@@ -38,9 +38,9 @@ Arquivos* argumentosEntrada(int argc, char* argv[]){
 
 int** alocaMatriz(int linha, int coluna){
 
-  int **matriz = (int**)malloc(linha*sizeof(int*));
+  int **matriz = (int**)calloc(linha,sizeof(int*));
   for (int i=0; i<linha; i++)
-    matriz[i] = (int*)malloc(coluna*sizeof(int));
+    matriz[i] = (int*)calloc(coluna,sizeof(int));
 
   return matriz;
 }
@@ -57,28 +57,29 @@ int verificaArqVazio(FILE* arq){
 }
 
 int calculaQtdArestas(FILE* arq){
-  int qtdArestas = -1; // a primeira linha não é uma aresta, por isso -> (-1)
+  int qtdArestas = 0; // a primeira linha não é uma aresta, por isso -> (-1)
   while (!feof(arq))
-    if (fgetc(arq) == '\n' || feof(arq))                     // calcula a quantidade de veiculos
+    if (fgetc(arq) == '\n')                     // calcula a quantidade de veiculos
       qtdArestas++;                                          // por meio da quantidade de '\n'
   rewind(arq);
   return qtdArestas;
 }
 
 int leNumVertices(FILE *arq){
-  int qtdAlgarismo = 0;
-  while (fgetc(arq) != '\n')  // quantidade de algarismos na primeira linha do arquivo
-    qtdAlgarismo++;           // onde está o número de vertices, para alocar
-  rewind(arq);                // a quantidade certa de memoria para receber o valor
-
-  char num_char[qtdAlgarismo+1];
-  fgets(num_char, sizeof(num_char), arq); // lê do arq a primeira linha e guarda em num_char
-  int num_int = 0;
-  for (int i = qtdAlgarismo, j = 0; i>0; i--, j++){ // transforma char em int
-    num_int += (num_char[j]-48) * pow(10, i-1);     // num * 10^i
-  }
-
-  return num_int;
+  // int qtdAlgarismo = 0;
+  // while (fgetc(arq) != '\n')  // quantidade de algarismos na primeira linha do arquivo
+  //   qtdAlgarismo++;           // onde está o número de vertices, para alocar
+  // rewind(arq);                // a quantidade certa de memoria para receber o valor
+  //
+  // char num_char[qtdAlgarismo+1];
+  // fgets(num_char, sizeof(num_char), arq); // lê do arq a primeira linha e guarda em num_char
+  // int num_int = 0;
+  // for (int i = qtdAlgarismo, j = 0; i>0; i--, j++){ // transforma char em int
+  //   num_int += (num_char[j]-48) * pow(10, i-1);     // num * 10^i
+  // }
+int numVertices;
+fscanf(arq, "%d",&numVertices);
+  return numVertices;
 }
 
 
@@ -90,17 +91,23 @@ int** leArestas(FILE *arq, int qtdArestas){
         if (j == 0){
 
           mat[i][0] = c - 48;
-          printf("%d ", mat[i][0]);
+          //printf("%d ", mat[i][0]);
         }
         if (j == 2){
 
           mat[i][1] = c - 48;
-          printf("%d\n", mat[i][1]);
+          //printf("%d\n", mat[i][1]);
         }
 
     }
     fscanf(arq, "\n");
+
   }
+  // for (int i=0; i<qtdArestas; i++){
+  //   for (int j=0; j<2; j++)
+  //   printf("%d ", mat[i][j]);
+  //   printf("\n");
+  // }
   return mat;
 }
 
@@ -114,4 +121,10 @@ void contaTempoProcessador(double *utime, double *stime){
 void imprimeTempo(double user_time, double system_time, FILE* arq){
   fprintf(arq, "Tempo de execução:\n");
   fprintf(arq, "%fs (tempo de usuário) + %fs (tempo de sistema) = %fs (tempo total)\n\n", user_time, system_time, user_time+system_time);
+}
+
+void liberaArquivos(Arquivos *arq){
+  fclose(arq->entrada);
+  fclose(arq->saida);
+  free(arq);
 }
