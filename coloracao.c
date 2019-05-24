@@ -122,8 +122,8 @@ int heuristica1(Grafo* gr){
       //   printf("%d cor: %d\n",V[i].id,V[i].cor);
       //   printf("\n");
   }
-  for(int i=0; i < gr->numVertices; i++)
-    printf("%d cor: %d\n",V[i].id,V[i].cor);
+  // for(int i=0; i < gr->numVertices; i++)
+  //   printf("%d cor: %d\n",V[i].id,V[i].cor);
   free(V);
   return k;
 }
@@ -131,9 +131,10 @@ void atribuiCor(Grafo* gr,Vertice* V,int maisSaturado){
   for(int i = 0; i < gr->numVertices; i++){
     if(gr->MatAdj[V[maisSaturado].id][i] && V[maisSaturado].cor == V[i].cor){
       V[maisSaturado].cor++;
-      i = 0;
+      return;
     }
   }
+  return ;
 }
 int novoMaisSaturado(Grafo* gr,Vertice* V){
   int  maior = -1;
@@ -157,7 +158,13 @@ int heuristica2(Grafo* gr){
   for(int i = 0; i < gr->numVertices; i++){
     V[maisSaturado].corDefinitiva = TRUE;
     V[maisSaturado].cor = 1;
-    atribuiCor(gr,V,maisSaturado);
+    int corControle = 0;
+
+    while(corControle < V[maisSaturado].cor){
+      //printf("%d ",V[maisSaturado].cor);
+      atribuiCor(gr,V,maisSaturado);
+        corControle++;
+    }
     if(V[maisSaturado].cor > k)
       k = V[maisSaturado].cor;
     atualizaSaturacao(gr,V,maisSaturado);
